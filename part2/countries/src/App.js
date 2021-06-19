@@ -17,11 +17,9 @@ function App() {
     if (country.length !== 0) {
       const fetchWeather = async () => {
         const api_key = process.env.REACT_APP_API_KEY;
-        console.log(api_key);
         const { data } = await axios.get(
           `http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`
         );
-        console.log(data);
         setWeather(data.current);
       };
       fetchWeather();
