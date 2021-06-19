@@ -3,6 +3,7 @@ import personServices from './services/persons';
 import Persons from './components/Persons';
 import PersonForm from './components/PersonForm';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +11,7 @@ const App = () => {
   const [newPhone, setNewPhone] = useState('');
 
   const [keyword, setKeyword] = useState('');
+  const [message, setMessage] = useState({ str: '', variant: '' });
 
   useEffect(() => {
     personServices.getAll().then((initialPersons) => {
@@ -44,14 +46,28 @@ const App = () => {
             );
           })
           .catch((error) => {
-            alert(` '${existedPhone.name}' was already deleted from server`);
             setPersons(persons.filter((p) => p.id !== existedPhone.id));
+            setMessage({
+              str: ` ${existedPhone.name} was already deleted from server`,
+              variant: 'danger',
+            });
+            setTimeout(() => {
+              setMessage({ str: '', variant: 'success' });
+            }, 5000);
           });
       }
     } else {
       // create new person
       personServices.createPerson(phoneBookObj).then((returnPersons) => {
         setPersons([...persons, returnPersons]);
+
+        setMessage({
+          str: ` Added ${returnPersons.name}`,
+          variant: 'success',
+        });
+        setTimeout(() => {
+          setMessage({ str: '', variant: '' });
+        }, 5000);
       });
     }
     // clear input
@@ -65,8 +81,18 @@ const App = () => {
     if (result) {
       personServices.deletePerson(id);
 
-      const filteredPersons = persons.filter((p) => p.id !== id);
-      setPersons(filteredPersons);
+      const deletedPersons = persons.filter((p) => p.id !== id);
+
+      // message: success delete
+      setMessage({
+        str: ` Deleted ${name}`,
+        variant: 'danger',
+      });
+      setTimeout(() => {
+        setMessage({ str: '', variant: '' });
+      }, 5000);
+
+      setPersons(deletedPersons);
     }
   };
 
@@ -81,13 +107,16 @@ const App = () => {
     setKeyword(e.target.value);
   };
 
+  // filter person by name
   const filteredPersons = persons.filter((person) => {
-    return person.name.includes(keyword);
+    return person.name.toLowerCase().includes(keyword);
   });
 
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={message} />
 
       <Filter keyword={keyword} handleChangeKeyword={handleChangeKeyword} />
 
@@ -101,11 +130,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      {filteredPersons.length > 0 ? (
-        <Persons persons={filteredPersons} handleDelete={handleDelete} />
-      ) : (
-        <Persons persons={persons} handleDelete={handleDelete} />
-      )}
+      <Persons persons={filteredPersons} handleDelete={handleDelete} />
     </div>
   );
 };
