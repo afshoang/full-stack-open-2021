@@ -1,12 +1,10 @@
 import React from 'react';
 
-const Notification = ({ message }) => {
-  if (message.str === '') {
-    return null;
-  }
-
+const Notification = ({ alert }) => {
   return (
-    <div className={`notification ${message.variant}`}>{`${message.str}`}</div>
+    alert !== null && (
+      <div className={`notification ${alert.type}`}>{`${alert.msg}`}</div>
+    )
   );
 };
 

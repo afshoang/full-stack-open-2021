@@ -11,7 +11,15 @@ const App = () => {
   const [newPhone, setNewPhone] = useState('');
 
   const [keyword, setKeyword] = useState('');
-  const [message, setMessage] = useState({ str: '', variant: '' });
+  const [alert, setAlert] = useState(null);
+
+  const showAlert = (msg, type) => {
+    setAlert({ msg, type });
+
+    setTimeout(() => {
+      setAlert(null);
+    }, 5000);
+  };
 
   useEffect(() => {
     personServices.getAll().then((initialPersons) => {
@@ -31,10 +39,10 @@ const App = () => {
 
     // if existed phone book => update number
     if (existedPhone) {
-      const msg = window.confirm(
+      const mess = window.confirm(
         `${existedPhone.name} already added to phonebook, replace the old number with the new one?`
       );
-      if (msg) {
+      if (mess) {
         // update person
         personServices
           .updatePerson(existedPhone.id, phoneBookObj)
@@ -47,28 +55,25 @@ const App = () => {
           })
           .catch((error) => {
             setPersons(persons.filter((p) => p.id !== existedPhone.id));
-            setMessage({
-              str: ` ${existedPhone.name} was already deleted from server`,
-              variant: 'danger',
-            });
-            setTimeout(() => {
-              setMessage({ str: '', variant: 'success' });
-            }, 5000);
+            showAlert(
+              `${existedPhone.name} was already deleted from server`,
+              'danger'
+            );
           });
       }
     } else {
       // create new person
-      personServices.createPerson(phoneBookObj).then((returnPersons) => {
-        setPersons([...persons, returnPersons]);
+      personServices
+        .createPerson(phoneBookObj)
+        .then((returnPersons) => {
+          setPersons([...persons, returnPersons]);
 
-        setMessage({
-          str: ` Added ${returnPersons.name}`,
-          variant: 'success',
+          showAlert(`Added ${returnPersons.name}`, 'success');
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+          showAlert(`${error.response.data.error}`, 'danger');
         });
-        setTimeout(() => {
-          setMessage({ str: '', variant: '' });
-        }, 5000);
-      });
     }
     // clear input
     setNewName('');
@@ -84,13 +89,7 @@ const App = () => {
       const deletedPersons = persons.filter((p) => p.id !== id);
 
       // message: success delete
-      setMessage({
-        str: ` Deleted ${name}`,
-        variant: 'danger',
-      });
-      setTimeout(() => {
-        setMessage({ str: '', variant: '' });
-      }, 5000);
+      showAlert(` Deleted ${name}`, 'danger');
 
       setPersons(deletedPersons);
     }
@@ -116,7 +115,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={message} />
+      <Notification alert={alert} />
 
       <Filter keyword={keyword} handleChangeKeyword={handleChangeKeyword} />
 
