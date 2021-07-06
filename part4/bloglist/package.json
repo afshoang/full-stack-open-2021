@@ -4,9 +4,9 @@
   "description": "bloglist app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon backend/server"
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "HoangPham",
   "license": "ISC",
@@ -17,6 +17,12 @@
     "mongoose": "^5.12.15"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "cross-env": "^7.0.3",
+    "jest": "^27.0.6",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
