@@ -3,7 +3,7 @@ const Blog = require('../models/blog')
 
 // Get all blogs
 blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
 
   res.json(blogs)
 })
@@ -19,6 +19,7 @@ blogsRouter.post('/', async (req, res) => {
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes || 0,
+    user: req.body.userId,
   }
 
   const blog = new Blog(newBlog)
