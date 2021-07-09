@@ -2,8 +2,10 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const express = require('express')
 const app = express()
+require('express-async-errors')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 
@@ -26,5 +28,8 @@ app.use(cors())
 
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+
+// this has to be the last loaded middleware.
+app.use(middleware.errorHandler)
 
 module.exports = app

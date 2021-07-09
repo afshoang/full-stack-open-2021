@@ -9,8 +9,19 @@ usersRouter.get('/', async (req, res) => {
 })
 
 // @desc Create new user
-usersRouter.post('/', async (req, res) => {
+usersRouter.post('/', async (req, res, next) => {
   const { username, password, name } = req.body
+
+  // user or pass is missing
+  if (!username || !password) {
+    return res.status(400).json({
+      error: 'username or password is missing',
+    })
+  } else if (username.length < 3 || password.length < 3) {
+    return res.status(400).json({
+      error: 'username and password must be at least 3 character long',
+    })
+  }
 
   const salt = await bcryptjs.genSalt(10)
   const passwordHash = await bcryptjs.hash(password, salt)
