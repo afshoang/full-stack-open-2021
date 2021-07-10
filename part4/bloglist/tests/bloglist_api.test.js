@@ -5,6 +5,22 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 
+// token
+let token
+
+beforeAll((done) => {
+  api
+    .post('/api/login')
+    .send({
+      username: 'hoangpham',
+      password: 'secret',
+    })
+    .end((err, res) => {
+      token = res.body.token
+      done()
+    })
+})
+
 beforeEach(async () => {
   await Blog.deleteMany({})
 
@@ -44,6 +60,7 @@ test('create a new blog post', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlogPost)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -65,6 +82,7 @@ test('if the like prop is missing, it will default to 0', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
     .send(newBlogPost)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -78,10 +96,30 @@ test('a blog post without title or author will not be added', async () => {
     url: 'http://hoangpham.com',
   }
 
-  await api.post('/api/blogs').send(newBlogPost).expect(400)
+  await api
+    .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
+    .send(newBlogPost)
+    .expect(400)
 
   const response = await api.get('/api/blogs')
   expect(response.body).toHaveLength(helper.initialBlogs.length)
+})
+
+test('add a blog without token will be fail with 401 status code', async () => {
+  const newBlogPost = {
+    title: 'this is test blog',
+    author: 'HoangPham',
+    url: 'http://hoangpham.com',
+    likes: 999,
+  }
+
+  await api
+    .post('/api/blogs')
+    .set('Authorization', `Bearer failedtoken`)
+    .send(newBlogPost)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
 })
 
 afterAll(() => {
