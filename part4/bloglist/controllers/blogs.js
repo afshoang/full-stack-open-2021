@@ -11,7 +11,7 @@ blogsRouter.get('/', async (req, res) => {
 
 // Create a new blog
 blogsRouter.post('/', async (req, res) => {
-  if (req.body.title === undefined || req.body.author === undefined) {
+  if (req.body.title === '' || req.body.author === '') {
     return res.status(400).end()
   }
   const userId = req.user.id
