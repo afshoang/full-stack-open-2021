@@ -40,7 +40,7 @@ blogsRouter.delete('/:id', async (req, res) => {
   // get creator of this blog
   const blog = await Blog.findById(req.params.id)
 
-  // get user is logged
+  // get user is logged from middleware
   const user = req.user
 
   // without token or userId !== blog.user.id

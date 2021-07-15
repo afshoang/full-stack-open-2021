@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './App.css'
 import Alert from './components/Alert'
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [blog, setBlog] = useState({ title: '', author: '', url: '' })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -49,28 +50,37 @@ const App = () => {
     localStorage.removeItem('loggedUserJSON')
   }
 
-  const handleChange = ({ target }) => {
-    const { name, value } = target
-    setBlog((prevState) => ({ ...prevState, [name]: value }))
-  }
-
-  const handleAddBlog = async (e) => {
-    e.preventDefault()
+  const handleAddBlog = async (blogObj) => {
+    blogFormRef.current.toggleVisibility()
     try {
-      const addedBlog = await blogService.create(blog)
+      const addedBlog = await blogService.create(blogObj)
       setBlogs([...blogs, addedBlog])
       showAlert(
         `a new blog ${addedBlog.title} by ${addedBlog.author} added`,
         'success'
       )
-      setBlog({
-        title: '',
-        author: '',
-        url: '',
-      })
     } catch (error) {
       console.log(error)
       showAlert(`Please fill all fields!`, 'danger')
+    }
+  }
+
+  const updateBlog = async (id) => {
+    try {
+      const updatedBlog = await blogService.update(id)
+      setBlogs((prevState) => {
+        const stateCopy = [...prevState]
+        stateCopy.map((el) =>
+          el.id === updatedBlog.id ? { ...el, likes: el.likes++ } : el
+        )
+        return [...stateCopy]
+      })
+      showAlert(
+        `blog ${updatedBlog.title} by ${updatedBlog.author} updated`,
+        'success'
+      )
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -82,11 +92,15 @@ const App = () => {
     }, 5000)
   }
 
+  // ref for blogFrom
+  const blogFormRef = useRef()
+
   if (user === null) {
     return (
       <>
         <h2>Login to application</h2>
         <Alert alert={alert} />
+
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -121,43 +135,12 @@ const App = () => {
           {user.name} logged in <button onClick={handleLogout}>logout</button>
         </p>
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
         ))}
       </div>
-      <div>
-        <h2>Create new blog</h2>
-
-        <div>
-          title
-          <input
-            type='text'
-            value={blog.title}
-            name='title'
-            required
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          author
-          <input
-            type='text'
-            value={blog.author}
-            name='author'
-            required
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          url
-          <input
-            type='text'
-            value={blog.url}
-            name='url'
-            onChange={handleChange}
-          />
-        </div>
-        <button onClick={handleAddBlog}>Add new blog</button>
-      </div>
+      <Togglable labelButton='Create a new blog' ref={blogFormRef}>
+        <BlogForm handleAddBlog={handleAddBlog} />
+      </Togglable>
     </>
   )
 }
