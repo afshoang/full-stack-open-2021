@@ -61,7 +61,7 @@ const App = () => {
       )
     } catch (error) {
       console.log(error)
-      showAlert(`Please fill all fields!`, 'danger')
+      showAlert('Please fill all fields!', 'danger')
     }
   }
 
