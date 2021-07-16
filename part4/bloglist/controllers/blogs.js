@@ -60,6 +60,8 @@ blogsRouter.put('/:id', async (req, res) => {
   // get user is logged from middleware
   const user = req.user
 
+  console.log(user)
+
   // without token or userId !== blog.user.id
   if (!user) {
     return res.status(401).json({ error: 'you have to login first' })
