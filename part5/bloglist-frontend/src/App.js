@@ -84,6 +84,29 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (blog) => {
+    try {
+      const confirm = window.confirm(
+        `Remove blog ${blog.title} by ${blog.author}`
+      )
+
+      if (!confirm) {
+        return
+      }
+
+      await blogService.deleteBlog(blog.id)
+      setBlogs((prevState) => {
+        const stateCopy = [...prevState]
+        const filteredState = stateCopy.filter((el) => el.id !== blog.id)
+        return [...filteredState]
+      })
+      showAlert(`Deleted blog ${blog.title}`, 'success')
+    } catch (error) {
+      console.log(error)
+      showAlert('You dont have permission to delete this blog', 'danger')
+    }
+  }
+
   const showAlert = (msg, type) => {
     setAlert({ msg, type })
 
@@ -134,9 +157,16 @@ const App = () => {
         <p>
           {user.name} logged in <button onClick={handleLogout}>logout</button>
         </p>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
-        ))}
+        {blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={updateBlog}
+              deleteBlog={deleteBlog}
+            />
+          ))}
       </div>
       <Togglable labelButton='Create a new blog' ref={blogFormRef}>
         <BlogForm handleAddBlog={handleAddBlog} />

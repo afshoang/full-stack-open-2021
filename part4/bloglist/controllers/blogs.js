@@ -35,7 +35,7 @@ blogsRouter.post('/', async (req, res) => {
   res.status(201).json(result)
 })
 
-// Delete a single note
+// Delete a single blog
 blogsRouter.delete('/:id', async (req, res) => {
   // get creator of this blog
   const blog = await Blog.findById(req.params.id)
@@ -57,6 +57,14 @@ blogsRouter.delete('/:id', async (req, res) => {
 
 // Update a blog
 blogsRouter.put('/:id', async (req, res) => {
+  // get user is logged from middleware
+  const user = req.user
+
+  // without token or userId !== blog.user.id
+  if (!user) {
+    return res.status(401).json({ error: 'you have to login first' })
+  }
+
   const blogToUpdate = await Blog.findById(req.params.id)
 
   blogToUpdate.likes += 1
