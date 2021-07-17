@@ -11,7 +11,6 @@ const BlogForm = ({ handleAddBlog }) => {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    console.log('submit form add blog')
     handleAddBlog(blog)
 
     setBlog({
@@ -29,6 +28,7 @@ const BlogForm = ({ handleAddBlog }) => {
         <div>
           title
           <input
+            id='title'
             type='text'
             value={blog.title}
             name='title'
@@ -39,6 +39,7 @@ const BlogForm = ({ handleAddBlog }) => {
         <div>
           author
           <input
+            id='author'
             type='text'
             value={blog.author}
             name='author'
@@ -49,6 +50,7 @@ const BlogForm = ({ handleAddBlog }) => {
         <div>
           url
           <input
+            id='url'
             type='text'
             value={blog.url}
             name='url'
