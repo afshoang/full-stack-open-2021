@@ -132,6 +132,7 @@ const App = () => {
               value={username}
               name='Username'
               onChange={({ target }) => setUsername(target.value)}
+              data-test='username'
             />
           </div>
           <div>
@@ -141,9 +142,12 @@ const App = () => {
               value={password}
               name='Password'
               onChange={({ target }) => setPassword(target.value)}
+              data-test='password'
             />
           </div>
-          <button type='submit'>Login</button>
+          <button type='submit' data-test='login-button'>
+            Login
+          </button>
         </form>
       </>
     )
