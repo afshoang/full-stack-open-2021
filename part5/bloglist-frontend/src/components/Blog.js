@@ -27,8 +27,8 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
       {visible && (
         <>
           <p>{blog.url}</p>
-          <p>
-            {blog.likes}{' '}
+          <p id='likes'>
+            {blog.likes}
             <button onClick={() => handleLike(blog.id)}>like</button>
           </p>
           <button onClick={() => deleteBlog(blog)}>remove</button>
