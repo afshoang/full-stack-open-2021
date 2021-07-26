@@ -38,13 +38,7 @@ const anecdoteReducer = (state = [], action) => {
       )
 
     case 'CREATE_ANECDOTE':
-      const newAnecdote = {
-        content: action.data,
-        id: getId(),
-        votes: 0,
-      }
-
-      return [...state, newAnecdote]
+      return [...state, action.data]
 
     default:
       return state
