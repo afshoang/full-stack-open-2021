@@ -9,16 +9,17 @@ const messageReducer = (state = null, action) => {
   }
 }
 
-export const messageChange = (message) => {
-  return {
-    type: 'SET_MESSAGE',
-    message,
-  }
-}
-
-export const clearMessage = () => {
-  return {
-    type: 'CLEAR_MESSAGE',
+export const messageChange = (message, time) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'SET_MESSAGE',
+      message,
+    })
+    setTimeout(() => {
+      dispatch({
+        type: 'CLEAR_MESSAGE',
+      })
+    }, time)
   }
 }
 

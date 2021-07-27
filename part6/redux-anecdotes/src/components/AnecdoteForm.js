@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
-import anecdoteServices from '../services/anecdotes'
 
 const AnecdoteForm = () => {
   const [anecdote, setAnecdote] = useState('')
@@ -10,8 +9,7 @@ const AnecdoteForm = () => {
 
   const addAnecdote = async (e) => {
     e.preventDefault()
-    const newAnecdote = await anecdoteServices.createNew(anecdote)
-    dispatch(createAnecdote(newAnecdote))
+    dispatch(createAnecdote(anecdote))
     setAnecdote('')
   }
 

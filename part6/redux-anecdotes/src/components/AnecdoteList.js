@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateVote } from '../reducers/anecdoteReducer'
-import { messageChange, clearMessage } from '../reducers/messageReducer'
+import { messageChange } from '../reducers/messageReducer'
 import Notification from './Notification'
 import Filter from './Filter'
 
@@ -12,10 +12,7 @@ const AnecdoteList = () => {
 
   const vote = (anecdote) => {
     dispatch(updateVote(anecdote.id))
-    dispatch(messageChange(`you vote ${anecdote.content}`))
-    setTimeout(() => {
-      dispatch(clearMessage())
-    }, 5000)
+    dispatch(messageChange(`you vote ${anecdote.content}`, 5000))
   }
 
   const filteredAnecdote = anecdotes.filter((anecdote) =>
