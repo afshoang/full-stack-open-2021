@@ -1,12 +1,16 @@
 {
   "notes": [
     {
-      "content": "custom-hooks are grat",
+      "content": "custom-hooks are grate",
       "id": 1
     },
     {
       "content": "the best featrure ever <3",
       "id": 2
+    },
+    {
+      "content": "clear after created",
+      "id": 3
     }
   ],
   "persons": [
