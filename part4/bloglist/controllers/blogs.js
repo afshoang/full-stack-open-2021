@@ -9,6 +9,17 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
+// Get single blog
+blogsRouter.get('/:id', async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+
+  if (!blog) {
+    res.status(404).json({ message: 'Not found this blog' })
+  }
+
+  res.json(blog)
+})
+
 // Create a new blog
 blogsRouter.post('/', async (req, res) => {
   if (req.body.title === '' || req.body.author === '') {
@@ -62,7 +73,7 @@ blogsRouter.put('/:id', async (req, res) => {
 
   console.log(user)
 
-  // without token or userId !== blog.user.id
+  // without token
   if (!user) {
     return res.status(401).json({ error: 'you have to login first' })
   }
@@ -71,9 +82,9 @@ blogsRouter.put('/:id', async (req, res) => {
 
   blogToUpdate.likes += 1
 
-  const updatedBlog = await blogToUpdate.save()
+  await blogToUpdate.save()
 
-  res.json(updatedBlog)
+  res.status(204).end()
 })
 
 module.exports = blogsRouter

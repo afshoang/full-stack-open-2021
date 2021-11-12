@@ -1,16 +1,3 @@
-import blogService from '../services/blogs'
-
-const blogReducer = (state = { blogs: [] }, action) => {
-  switch (action.type) {
-    case 'INIT_BLOG':
-      return { ...state, blogs: action.data }
-    case 'CREATE_BLOG':
-      return [...state, action.data]
-    default:
-      return state
-  }
-}
-
 export const blogListReducer = (state = { blogs: [] }, action) => {
   switch (action.type) {
     case 'BLOG_LIST_REQUEST':
@@ -24,16 +11,16 @@ export const blogListReducer = (state = { blogs: [] }, action) => {
   }
 }
 
-export const blogCreateReducer = (state = { blog: {} }, action) => {
+export const blogCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case 'BLOG_CREATE_REQUEST':
-      return { post: {} }
+      return { loading: true }
     case 'BLOG_CREATE_SUCCESS':
-      return { success: true, post: {} }
+      return { loading: false, success: true }
     case 'BLOG_CREATE_FAIL':
       return { success: false, error: action.payload }
     case 'BLOG_CREATE_RESET':
-      return { post: {} }
+      return {}
     default:
       return state
   }
@@ -54,29 +41,17 @@ export const blogDeleteReducer = (state = {}, action) => {
   }
 }
 
-export const createBlog = (blogToCreate) => {
-  return async (dispatch, getState) => {
-    const {
-      user: { userLogin },
-    } = getState()
-    const blog = await blogService.createBlog(blogToCreate, userLogin.token)
-    dispatch({ type: 'CREATE_BLOG', data: blog })
+export const blogLikeReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'BLOG_LIKE_REQUEST':
+      return { loading: true }
+    case 'BLOG_LIKE_SUCCESS':
+      return { loading: false, success: true }
+    case 'BLOG_LIKE_FAIL':
+      return { loading: false, success: false, error: action.payload }
+    case 'BLOG_LIKE_RESET':
+      return {}
+    default:
+      return state
   }
 }
-
-export const deleteBlog = (id) => {
-  return async (dispatch, getState) => {
-    try {
-      dispatch({ type: 'BLOG_DELETE_REQUEST' })
-      const {
-        user: { userLogin },
-      } = getState()
-      blogService.deleteBlog(id, userLogin.token)
-      dispatch({ type: 'BLOG_DELETE_SUCCESS' })
-    } catch (error) {
-      dispatch({ type: 'BLOG_DELETE_FAIL' })
-    }
-  }
-}
-
-export default blogReducer

@@ -59,3 +59,27 @@ export const deleteBlog = (id) => {
     }
   }
 }
+
+export const likeBlog = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({ type: 'BLOG_LIKE_REQUEST' })
+
+      const {
+        userLogin: { userInfo },
+      } = getState()
+
+      const config = {
+        headers: {
+          Authorization: `bearer ${userInfo.token}`,
+        },
+      }
+
+      await axios.put(`/api/blogs/${id}`, config)
+
+      dispatch({ type: 'BLOG_LIKE_SUCCESS' })
+    } catch (error) {
+      dispatch({ type: 'BLOG_LIKE_FAIL', payload: error })
+    }
+  }
+}
