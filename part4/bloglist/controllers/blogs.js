@@ -4,7 +4,14 @@ const User = require('../models/user')
 
 // Get all blogs
 blogsRouter.get('/', async (req, res) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  const userId = req.query.userId
+  console.log(userId)
+  let blogs
+  if (userId) {
+    blogs = await Blog.find({ user: userId })
+  } else {
+    blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  }
 
   res.json(blogs)
 })
