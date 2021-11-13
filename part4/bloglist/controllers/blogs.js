@@ -25,25 +25,31 @@ blogsRouter.post('/', async (req, res) => {
   if (req.body.title === '' || req.body.author === '') {
     return res.status(400).end()
   }
+  // extract from token req.user
   const userId = req.user.id
   if (!req.token || !userId) {
     return res.status(401).json({ error: 'token missing or invalid' })
   }
+  // Get user by id extract from token
   const user = await User.findById(userId)
 
   const newBlog = {
     title: req.body.title,
     author: req.body.author,
     url: req.body.url,
-    likes: req.body.likes || 0,
+    likes: 0,
     user: user.id,
   }
 
   const blog = new Blog(newBlog)
 
-  const result = await blog.save()
+  const savedBlog = await blog.save()
 
-  res.status(201).json(result)
+  // add this blog id to blogs field of User table
+  user.blogs = [...user.blogs, savedBlog.id]
+  await user.save()
+
+  res.status(201).json(savedBlog)
 })
 
 // Delete a single blog
