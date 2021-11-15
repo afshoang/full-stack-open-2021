@@ -1,5 +1,19 @@
 import axios from 'axios'
 
+export const fetchUsers = () => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: 'USER_LIST_REQUEST' })
+
+      const { data } = await axios.get('/api/users')
+
+      dispatch({ type: 'USER_LIST_SUCCESS', payload: data })
+    } catch (error) {
+      dispatch({ type: 'USER_LIST_FAIL', payload: error })
+    }
+  }
+}
+
 export const register = (newUser) => {
   return async (dispatch) => {
     try {
@@ -27,6 +41,7 @@ export const login = (credential) => {
     }
   }
 }
+
 export const logout = () => {
   return async (dispatch) => {
     dispatch({ type: 'USER_LOGOUT' })

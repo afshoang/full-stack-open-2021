@@ -2,18 +2,27 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import {
+  blogCommentReducer,
   blogCreateReducer,
   blogDeleteReducer,
+  blogDetailReducer,
   blogLikeReducer,
   blogListReducer,
 } from './reducers/blogReducer'
-import { userLoginReducer, userRegisterReducer } from './reducers/userReducer'
+import {
+  userListReducer,
+  userLoginReducer,
+  userRegisterReducer,
+} from './reducers/userReducer'
 
 const reducer = combineReducers({
   blogList: blogListReducer,
+  blogDetail: blogDetailReducer,
   blogCreate: blogCreateReducer,
   blogDelete: blogDeleteReducer,
   blogLike: blogLikeReducer,
+  blogComment: blogCommentReducer,
+  userList: userListReducer,
   userRegister: userRegisterReducer,
   userLogin: userLoginReducer,
 })

@@ -5,6 +5,8 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import Write from './pages/Write'
 import Topbar from './components/Topbar'
+import SingleBlog from './pages/SingleBlog'
+import UserList from './pages/UserList'
 
 const App = () => {
   return (
@@ -19,6 +21,12 @@ const App = () => {
         </Route>
         <Route path='/write'>
           <Write />
+        </Route>
+        <Route path='/blog/:id'>
+          <SingleBlog />
+        </Route>
+        <Route path='/users'>
+          <UserList />
         </Route>
         <Route path='/' exact>
           <Home />

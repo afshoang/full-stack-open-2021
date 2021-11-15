@@ -7,7 +7,7 @@ const Header = () => {
     <>
       <Topbar />
       <header
-        className='relative py-52 hero mb-12'
+        className='relative py-52 hero mb-12 '
         style={{
           background: `url(${homebg})`,
           backgroundSize: 'cover',
@@ -16,7 +16,7 @@ const Header = () => {
       >
         <div className='px-16 text-center text-white'>
           <h1 className='text-8xl font-bold'>Full Stack Open</h1>
-          <span>2021</span>
+          <span className='text-xl'>2021</span>
         </div>
       </header>
     </>

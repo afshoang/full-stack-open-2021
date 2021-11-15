@@ -11,6 +11,19 @@ export const blogListReducer = (state = { blogs: [] }, action) => {
   }
 }
 
+export const blogDetailReducer = (state = { blog: {} }, action) => {
+  switch (action.type) {
+    case 'BLOG_DETAIL_REQUEST':
+      return { blog: {} }
+    case 'BLOG_DETAIL_SUCCESS':
+      return { blog: action.payload }
+    case 'BLOG_DETAIL_FAIL':
+      return { error: action.payload }
+    default:
+      return state
+  }
+}
+
 export const blogCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case 'BLOG_CREATE_REQUEST':
@@ -50,6 +63,21 @@ export const blogLikeReducer = (state = {}, action) => {
     case 'BLOG_LIKE_FAIL':
       return { loading: false, success: false, error: action.payload }
     case 'BLOG_LIKE_RESET':
+      return {}
+    default:
+      return state
+  }
+}
+
+export const blogCommentReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'BLOG_COMMENT_REQUEST':
+      return { loading: true }
+    case 'BLOG_COMMENT_SUCCESS':
+      return { loading: false, success: true }
+    case 'BLOG_COMMENT_FAIL':
+      return { loading: false, success: false, error: action.payload }
+    case 'BLOG_COMMENT_RESET':
       return {}
     default:
       return state

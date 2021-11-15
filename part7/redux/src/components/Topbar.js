@@ -16,12 +16,15 @@ const Topbar = () => {
   return (
     <nav className='absolute top-0 left-0 right-0 bg-transparent z-50 text-white '>
       <div className='container mx-auto flex justify-between px-12 '>
-        <ul className='flex'>
+        <ul className='flex font-bold'>
           <Link to='/' className='p-3 hover:text-gray-200 '>
-            <li>HOME</li>
+            <li>BLOG</li>
           </Link>
           <Link to='/write' className='p-3 hover:text-gray-200'>
             <li>WRITE</li>
+          </Link>
+          <Link to='/users' className='p-3 hover:text-gray-200'>
+            <li>USER</li>
           </Link>
           {userInfo && (
             <li

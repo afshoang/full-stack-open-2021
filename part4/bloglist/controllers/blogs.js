@@ -5,10 +5,12 @@ const User = require('../models/user')
 // Get all blogs
 blogsRouter.get('/', async (req, res) => {
   const userId = req.query.userId
-  console.log(userId)
   let blogs
   if (userId) {
-    blogs = await Blog.find({ user: userId })
+    blogs = await Blog.find({ user: userId }).populate('user', {
+      username: 1,
+      name: 1,
+    })
   } else {
     blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   }
@@ -44,6 +46,7 @@ blogsRouter.post('/', async (req, res) => {
     title: req.body.title,
     author: req.body.author,
     url: req.body.url,
+    comments: [],
     likes: 0,
     user: user.id,
   }
@@ -98,6 +101,28 @@ blogsRouter.put('/:id', async (req, res) => {
   await blogToUpdate.save()
 
   res.status(204).end()
+})
+
+// Create a comment
+blogsRouter.post('/:id/comments', async (req, res) => {
+  // get user is logged from middleware
+  const user = req.user
+
+  // without token
+  if (!user) {
+    return res.status(401).json({ error: 'you have to login first' })
+  }
+
+  // get comment from req.body
+  const comment = req.body.comment
+
+  const blogToUpdate = await Blog.findById(req.params.id)
+
+  blogToUpdate.comments = [...blogToUpdate.comments, comment]
+
+  const savedBlog = await blogToUpdate.save()
+
+  res.status(200).json(savedBlog)
 })
 
 module.exports = blogsRouter

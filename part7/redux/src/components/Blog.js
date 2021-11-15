@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { deleteBlog, fetchBlogs, likeBlog } from '../action/blogActions'
 
 const Blog = ({ blog }) => {
@@ -28,11 +29,13 @@ const Blog = ({ blog }) => {
   return (
     <>
       <div className='p-6'>
-        <a href='/'>
+        <Link to={`/blog/${blog.id}`} className='hover:text-blue-400'>
           <h2 className='text-4xl font-bold mt-7 mb-2.5'>{blog.title}</h2>
-        </a>
+        </Link>
         <p>{blog.likes} likes</p>
-        <p className='text-gray-500 italic mb-2.5'>Posted by {blog.author}</p>
+        <p className='text-gray-500 italic mb-2.5'>
+          Posted by {blog.user.name}
+        </p>
         <div>
           <button
             onClick={() => handleLike()}
