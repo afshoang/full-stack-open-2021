@@ -95,7 +95,7 @@ export const likeBlog = (id) => {
         },
       }
 
-      await axios.put(`/api/blogs/${id}`, config)
+      await axios.put(`/api/blogs/${id}`, {}, config)
 
       dispatch({ type: 'BLOG_LIKE_SUCCESS' })
     } catch (error) {

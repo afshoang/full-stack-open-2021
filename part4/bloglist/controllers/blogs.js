@@ -91,16 +91,20 @@ blogsRouter.put('/:id', async (req, res) => {
 
   // without token
   if (!user) {
-    return res.status(401).json({ error: 'you have to login first' })
+    return res.status(401).json({ message: 'you have to login first' })
   }
 
   const blogToUpdate = await Blog.findById(req.params.id)
 
   blogToUpdate.likes += 1
 
-  await blogToUpdate.save()
+  const savedBlog = await blogToUpdate.save()
 
-  res.status(204).end()
+  res.status(200).json(savedBlog)
+
+  // await blogToUpdate.save()
+
+  // res.status(204).end()
 })
 
 // Create a comment
